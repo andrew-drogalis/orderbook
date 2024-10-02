@@ -8,7 +8,7 @@
 #ifndef DRO_MESSAGE_TYPES_HPP
 #define DRO_MESSAGE_TYPES_HPP
 
-#include "include/dro/bit-cast.hpp"
+#include "dro/bit-cast.hpp"
 
 #include <cstdint>
 #include <cstring>
@@ -28,7 +28,7 @@ struct AddOrderMessage
   uint64_t OrderReferenceNumber;
   char BuySellIndicator;
   uint32_t Shares;
-  char Stock[8];
+  uint64_t Stock;
   uint32_t Price;
 
   explicit AddOrderMessage(const char* buffer)
@@ -48,7 +48,7 @@ struct AddOrderMPIDMessage
   uint64_t OrderReferenceNumber;
   char BuySellIndicator;
   uint32_t Shares;
-  char Stock[8];
+  uint64_t Stock;
   uint32_t Price;
   // char Attribution;
 
@@ -142,6 +142,35 @@ struct OrderReplaceMessage
       : OriginalOrderReferenceNumber(convertToInt64(buffer + 11)),
         NewOrderReferenceNumber(convertToInt64(buffer + 19)),
         Shares(convertToInt32(buffer + 27)), Price(convertToInt32(buffer + 31))
+  {
+  }
+};
+
+struct OrderMessage
+{
+  uint32_t Price {};
+  uint32_t Shares {};
+  uint16_t LimitOrderBookID {};
+  char BuySellIndicator {};
+
+  OrderMessage() = default;
+  explicit OrderMessage(const AddOrderMessage& message, uint16_t orderbookID)
+      : Price(message.Price), Shares(message.Shares),
+        LimitOrderBookID(orderbookID),
+        BuySellIndicator(message.BuySellIndicator)
+  {
+  }
+  explicit OrderMessage(const AddOrderMPIDMessage& message,
+                        uint16_t orderbookID)
+      : Price(message.Price), Shares(message.Shares),
+        LimitOrderBookID(orderbookID),
+        BuySellIndicator(message.BuySellIndicator)
+  {
+  }
+  OrderMessage(uint32_t price, uint32_t shares, char buySell,
+               uint16_t orderbookID)
+      : Price(price), Shares(shares), BuySellIndicator(buySell),
+        LimitOrderBookID(orderbookID)
   {
   }
 };

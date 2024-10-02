@@ -8,20 +8,22 @@
 #ifndef DRO_BEST_BID_OFFER_HPP
 #define DRO_BEST_BID_OFFER_HPP
 
+#include <cstdint>
+
 namespace dro
 {
 
 struct BestBidOffer
 {
-  int64_t bid_size_ {-1};
-  int64_t bid_price_ {-1};
-  int64_t ask_size_ {-1};
-  int64_t ask_price_ {-1};
+  uint32_t bid_size_ {};
+  uint32_t bid_price_ {};
+  uint32_t ask_size_ {};
+  uint32_t ask_price_ {};
 
   BestBidOffer() = default;
 
-  BestBidOffer(int64_t bid_size, int64_t bid_price, int64_t ask_size,
-               int64_t ask_price)
+  BestBidOffer(uint32_t bid_size, uint32_t bid_price, uint32_t ask_size,
+               uint32_t ask_price)
       : bid_size_(bid_size), bid_price_(bid_price), ask_size_(ask_size),
         ask_price_(ask_price)
   {
