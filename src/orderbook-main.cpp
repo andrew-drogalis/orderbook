@@ -7,15 +7,14 @@
 
 #include "include/dro/data-feed.hpp"
 
-#include <algorithm>
-#include <boost/iostreams/device/mapped_file.hpp>
-#include <chrono>
-#include <cstdint>
-#include <iostream>
-#include <numeric>
-#include <string>
-#include <sys/time.h>
-#include <vector>
+#include <algorithm>                             // for sort
+#include <boost/iostreams/device/mapped_file.hpp>// for mapped_file
+#include <chrono>                                // for duration, duration...
+#include <cstdint>                               // for uint16_t, uint32_t
+#include <iostream>                              // for basic_ostream, ope...
+#include <numeric>                               // for accumulate
+#include <string>                                // for char_traits, basic...
+#include <vector>                                // for vector
 
 int main(int argc, char* argv[])
 {
@@ -26,7 +25,7 @@ int main(int argc, char* argv[])
   }
   boost::iostreams::mapped_file file(fileName);
 
-  dro::DataFeed feed(5'000'000, 10);
+  dro::DataFeed feed(1'000, 10);
   feed.Subscribe("AAPL");
 
   char buffer[64];
@@ -67,7 +66,6 @@ int main(int argc, char* argv[])
 
   std::cout << "\nMessage Count: " << messageCount << "\n";
   std::cout << "Symbols Count: " << feed.symbolCount() << "\n";
-  std::cout << "Symbol Orders Count: " << feed.ordersCount() << "\n";
 
   std::cout << "Min:    " << min << std::endl;
   std::cout << "Mean:   " << mean << std::endl;

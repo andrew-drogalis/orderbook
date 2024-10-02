@@ -8,10 +8,10 @@
 #ifndef DRO_DATA_FEED_HPP
 #define DRO_DATA_FEED_HPP
 
+#include "Open-Addressing-Hashmap/include/dro/oa-hashmap.hpp"
 #include "dro/bit-cast.hpp"
 #include "dro/limit-orderbook.hpp"
 #include "dro/message-types.hpp"
-#include "Open-Addressing-Hashmap/include/dro/oa-hashmap.hpp"
 
 #include <cstdint>
 #include <iostream>
@@ -25,15 +25,17 @@ class DataFeed
 {
 private:
   bool allStocks_ {};
-  uint64_t ordersProcessed_ {};
+  uint64_t ordersCount_ {};
   std::vector<LimitOrderBook> limitOrderBooks_;
   HashMap<uint64_t, uint32_t> symbolsMap_;
   HashMap<uint64_t, OrderMessage> ordersMap_;
 
 public:
-  DataFeed(size_t initialOrderSize, size_t initialSymbolSize)
+  DataFeed(size_t initialOrderSize, size_t initialSymbolSize,
+           bool allStocks = false)
       : symbolsMap_(initialSymbolSize, 0),
-        ordersMap_(initialOrderSize, std::numeric_limits<uint64_t>::max())
+        ordersMap_(initialOrderSize, std::numeric_limits<uint64_t>::max()),
+        allStocks_(allStocks)
   {
   }
 
@@ -141,7 +143,7 @@ public:
     {
       book.AddToBook(message.BuySellIndicator, message.Price, message.Shares);
     }
-    ++ordersProcessed_;
+    ++ordersCount_;
   }
 
   void OrderCancel(const char* buffer)
@@ -162,7 +164,7 @@ public:
     {
       ordersMap_.erase(it);
     }
-    ++ordersProcessed_;
+    ++ordersCount_;
   }
 
   void OrderDelete(const char* buffer)
@@ -178,7 +180,7 @@ public:
     LimitOrderBook& book = limitOrderBooks_[order.LimitOrderBookID];
     book.ReduceFromBook(order.BuySellIndicator, order.Price, order.Shares);
     ordersMap_.erase(it);
-    ++ordersProcessed_;
+    ++ordersCount_;
   }
 
   void OrderReplace(const char* buffer)
@@ -200,7 +202,7 @@ public:
                        OrderMessage(message.Price, message.Shares,
                                     order.BuySellIndicator,
                                     order.LimitOrderBookID));
-    ++ordersProcessed_;
+    ++ordersCount_;
   }
 
   void OrderExecuted(const char* buffer)
@@ -222,7 +224,7 @@ public:
     {
       ordersMap_.erase(it);
     }
-    ++ordersProcessed_;
+    ++ordersCount_;
   }
 
   void OrderExecutedWithPrice(const char* buffer)
@@ -248,12 +250,10 @@ public:
     {
       ordersMap_.erase(it);
     }
-    ++ordersProcessed_;
+    ++ordersCount_;
   }
 
   [[nodiscard]] size_t symbolCount() const { return symbolsMap_.size(); }
-
-  [[nodiscard]] size_t ordersCount() const { return ordersProcessed_; }
 };
 
 }// namespace dro

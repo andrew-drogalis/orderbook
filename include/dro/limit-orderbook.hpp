@@ -10,8 +10,8 @@
 
 #include <cstdint>
 
-#include "dro/best-bid-offer.hpp"
 #include "Flat-Map-RB-Tree/include/dro/flat-rb-tree.hpp"
+#include "dro/best-bid-offer.hpp"
 
 namespace dro
 {
@@ -27,14 +27,15 @@ class LimitOrderBook
 public:
   using price_level = uint32_t;
   using bid_level_map =
-      FlatMap<price_level, OrderBookLevel, uint32_t, std::greater<price_level>>;
+      FlatMap<price_level, OrderBookLevel, uint16_t, std::greater<price_level>>;
   using offer_level_map =
-      FlatMap<price_level, OrderBookLevel, uint32_t, std::less<price_level>>;
+      FlatMap<price_level, OrderBookLevel, uint16_t, std::less<price_level>>;
   using best_bid_offer = BestBidOffer;
 
 private:
-  bid_level_map bidLevels_ {50};
-  offer_level_map offerLevels_ {50};
+  static constexpr std::size_t initialLevelSize {100};
+  bid_level_map bidLevels_ {initialLevelSize};
+  offer_level_map offerLevels_ {initialLevelSize};
 
 public:
   LimitOrderBook() = default;
@@ -98,7 +99,6 @@ public:
     }
     return offerLevels_.begin()->first <= bidLevels_.begin()->first;
   }
-
 };
 }// namespace dro
 #endif
