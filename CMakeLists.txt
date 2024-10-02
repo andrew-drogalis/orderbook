@@ -8,7 +8,7 @@ include(GNUInstallDirs)
 
 find_package(Boost REQUIRED COMPONENTS system iostreams)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${Boost_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(${PROJECT_NAME} src/orderbook-main.cpp)
 

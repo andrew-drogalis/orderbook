@@ -1,0 +1,6 @@
+[submodule "Flat-Map-RB-Tree"]
+	path = Flat-Map-RB-Tree
+	url = https://github.com/drogalis/Flat-Map-RB-Tree.git
+[submodule "Open-Addressing-Hashmap"]
+	path = Open-Addressing-Hashmap
+	url = https://github.com/drogalis/Open-Addressing-Hashmap.git
