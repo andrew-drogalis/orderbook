@@ -1,0 +1,7 @@
+Message Count: 368366634
+Symbols Count: 8695
+Min:    13
+Mean:   84.5802
+99%:    205
+Max:    403131
+
